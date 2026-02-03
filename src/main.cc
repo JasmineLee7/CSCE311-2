@@ -1,10 +1,10 @@
 #include <iostream>
 #include "../lib/cli_parser.h"
-#include <proj1/lib/error.h>
+#include "../lib/error.h"
 //#include <proj1/lib/cli_proj1lib.a>
-#include <proj1/lib/sha256.h>
-#include <proj1/lib/thread_log.h>
-#include <proj1/lib/timings.h>
+#include "../lib/sha256.h"
+#include "../lib/thread_log.h"
+#include "../lib/timings.h"
 
 
 
