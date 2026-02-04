@@ -11,9 +11,8 @@
 #include <fstream>
 #include <sys/sysinfo.h>
 
+// validate that k<=n;
 int main(){
-    return 0;
-
     // read file in 
    int n = get_nprocs();
    std::cout<<"nprocs: "<<n<<std::endl;
