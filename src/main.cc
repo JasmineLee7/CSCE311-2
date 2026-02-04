@@ -19,32 +19,30 @@ int main(){
    cout<<"nprocs: "<<n<<endl;
 
 
-   struct Row;
-   std::vector<Row> rows_in;
+   //struct Row;
+  // std::vector<Row> rows_in;
 
 
   // change back tty 
-  std::ifstream tty_in("/dev/tty");
-      if (tty_in) {
-          int var;
-      tty_in >> var;
+  //std::ifstream tty_in("/dev/tty");
+  //    if (tty_in) {
+    //      int var;
+    //  tty_in >> var;
 
     // prompt for "x"
 
 
 
-    int curr_thread = 1;
-    int max_thread = n;
-}
-
+   // int curr_thread = 1;
+   // int max_thread = n;
 }
 
 // VS code really wants me to have a comment here
 
 // read file in 
 
-struct Row;
-std::vector<Row> rows_in;
+//struct Row;
+//std::vector<Row> rows_in;
 
 // change back tty 
 
