@@ -16,7 +16,7 @@ int main(){
 
     // read file in 
    int n = get_nprocs();
-   cout<<"nprocs: "<<n<<endl;
+   std::cout<<"nprocs: "<<n<<std::endl;
 
 
    //struct Row;
