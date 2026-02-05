@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sys/sysinfo.h>
 
+int k;
 
 struct Row {
     std::string id;
@@ -41,7 +42,7 @@ int main(int argc, char* argv[]) {
 
     // ask user for k
     // change back tty 
-    int k;
+    
 
     // "make realse threads as described" ---- Is this how you described it Lewis?
     std::vector<ThreadDatum> thread_data;
