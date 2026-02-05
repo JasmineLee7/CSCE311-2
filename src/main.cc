@@ -36,7 +36,7 @@ int main(){
 
     // keep curr_thread and max_thread='k'
     int curr_thread = 0;
-    int max_thread = k;
+    int max_thread = 1;
 }
 
 // work loop, pay attention to time. it should time out after 
