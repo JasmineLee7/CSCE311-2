@@ -75,7 +75,7 @@ void* StartRoutine(void* arg) {
     }
 
   ThreadDatum *index = reinterpret_cast<ThreadDatum *>(arg);
-  std::cout << "StartRoutine received index " << *index->thread_index << std::endl;
+  std::cout << "StartRoutine received index " << *(index->thread_index) << std::endl;
 
   return nullptr;
 }
