@@ -36,7 +36,6 @@ int main(){
     for(int i=0; i< n-k; i++){
         ThreadDatum td;
         td.thread_index = i+1; // thread index starts from 1
-        td.k = k;
         thread_data.push_back(td);
     }
 
