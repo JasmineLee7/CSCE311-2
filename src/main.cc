@@ -13,7 +13,6 @@ void* StartRoutine(void* arg);
 
 struct ThreadDatum {
     int thread_index:
-    int k;
 }
 
 int main(){
