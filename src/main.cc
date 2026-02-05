@@ -19,8 +19,8 @@ struct Row {
 
 struct ThreadDatum {
     int thread_index;
-    const int *k;
-    const *std::vector<Row> rows_in;
+    //const int *k;
+    //const *std::vector<Row> rows_in;
 };
 
 
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     std::vector<Row> rows_in;
 
     CliMode mode;   
-    Time_T timeout_ms;
+    Time_t timeout_ms;
     CliParse(argc, argv, &mode, &timeout_ms);
 
     // read file in 
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     // "make realse threads as described" ---- Is this how you described it Lewis?
     std::vector<ThreadDatum> thread_data;
     for(int i=0; i< n-k; i++){
-        ThreadDatum td{i, &k, &rows_in};
+        ThreadDatum td{i};//, &k, &rows_in};
         pthread_create(&td.thread_index, NULL, &StartRoutine, &td);
         td.thread_index = i+1; // thread index starts from 1
         thread_data.push_back(td);
