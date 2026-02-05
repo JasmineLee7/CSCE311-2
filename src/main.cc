@@ -21,7 +21,7 @@ struct ThreadDatum {
     pthread_t handle;
     int thread_index;
     const int *k;
-    const *std::vector<Row> rows_in;
+    const std::vector<Row> rows_in; // changed *vector to vector, maybe wrong. 
 };
 
 
@@ -42,8 +42,6 @@ int main(int argc, char* argv[]) {
     // ask user for k
     // change back tty 
     int k;
-    int curr_thread = 0;
-    int max_thread = k;
 
     // "make realse threads as described" ---- Is this how you described it Lewis?
     std::vector<ThreadDatum> thread_data;
@@ -69,13 +67,14 @@ int main(int argc, char* argv[]) {
 
 // work loop, pay attention to time. it should time out after 
 void* StartRoutine(void* arg) {
-
+    int curr_thread = 0;
+    int max_thread = k;
     while(curr_thread < max_thread){
         Timings_SleepMs(1000);
     }
 
   ThreadDatum *index = reinterpret_cast<ThreadDatum *>(arg);
-  std::cout << "StartRoutine received index " << *(index->thread_index) << std::endl;
+  std::cout << "StartRoutine received index " << (index->thread_index) << std::endl; // removed * from *(index->thread_index). Maybe wrong
 
   return nullptr;
 }
