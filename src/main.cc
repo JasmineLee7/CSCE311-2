@@ -29,7 +29,7 @@ struct ThreadDatum {
 void* StartRoutine(void* arg);
 
 int main(int argc, char* argv[]) {
-    std::vector<Row> rows_in;
+   // std::vector<Row> rows_in;
 
     CliMode mode;   
     Time_t timeout_ms;
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 // work loop, pay attention to time. it should time out after 
 void* StartRoutine(void* arg) {
     int curr_thread = 0;
-    int max_thread = ThreadDatum::k;
+    int max_thread = k; 
     while(curr_thread < max_thread){
         Timings_SleepMs(1000);
     }
