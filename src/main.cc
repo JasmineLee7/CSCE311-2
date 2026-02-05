@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
     // "make realse threads as described" ---- Is this how you described it Lewis?
     std::vector<ThreadDatum> thread_data;
     for(int i=0; i< n-k; i++){
-        ThreadDatum td ={pthread_t(),i};//, &k, &rows_in};
+        ThreadDatum td ={pthread_t(),i, &k, &rows_in};
         pthread_create(&td.handle, NULL, &StartRoutine, &td);
         td.thread_index = i+1; // thread index starts from 1
         thread_data.push_back(td);
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 // work loop, pay attention to time. it should time out after 
 void* StartRoutine(void* arg) {
     int curr_thread = 0;
-    int max_thread = ThreadDatum.k;
+    int max_thread = ThreadDatum::k;
     while(curr_thread < max_thread){
         Timings_SleepMs(1000);
     }
