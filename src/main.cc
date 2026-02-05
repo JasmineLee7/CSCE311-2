@@ -15,9 +15,12 @@ struct ThreadDatum {
     const int *k;
     const *std::vector<Row> rows_in;
 };
-    struct Row {
 
-    };
+struct Row {
+    std::string id;
+    std::string data;
+    int iterations;
+};
 
 void* StartRoutine(void* arg);
 
