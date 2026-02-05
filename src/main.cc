@@ -1,9 +1,9 @@
 #include <iostream>
-#include "../lib/cli_parser.h" // only runs this formet, otherwise error saying that the file doesnt exist
-#include <lib/error.h>
-#include "../lib/sha256.h"
-#include "../lib/thread_log.h"
-#include "../lib/timings.h"
+#include <proj1/lib/cli_parser.h> // only runs this formet, otherwise error saying that the file doesnt exist
+#include <proj1/lib/error.h>
+#include <proj1/lib/sha256.h>
+#include <proj1/lib/thread_log.h>
+#include <proj1/lib/timings.h>
 
 #include <vector>
 #include <fstream>
