@@ -42,8 +42,8 @@ int main(){
 
     //-- all --rate --thread 
     // read in from file
-    struct Row;
-    std::vector<Row> rows_in;
+    //struct Row;
+    //std::vector<Row> rows_in;
 
     int curr_thread = 0;
     int max_thread = k;
