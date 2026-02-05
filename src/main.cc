@@ -23,16 +23,11 @@ int main(){
       if (tty_in) {
           int var;
       tty_in >> var;
-      std::cout<<var<<std::endl;
+      std::cout<<"you entered Var: "<<var<<std::endl;
     }
-     
-    int k = 1;
 
     // There should be something incase the user enters K>n !!!
     // ask user for k
-    std::cout<<"Enter a value for K"<<std::endl;
-    std::cin>>k;
-    std::cout<<"You entered "<<k<<std::endl;
 
     
 
