@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 // work loop, pay attention to time. it should time out after 
 void* StartRoutine(void* arg) {
     int curr_thread = 0;
-    int max_thread = k;
+    int max_thread = ThreadDatum.k;
     while(curr_thread < max_thread){
         Timings_SleepMs(1000);
     }
