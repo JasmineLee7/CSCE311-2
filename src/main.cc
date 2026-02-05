@@ -15,13 +15,15 @@ struct ThreadDatum {
     const int *k;
     const *std::vector<Row> rows_in;
 };
+    struct Row {
+
+    };
 
 void* StartRoutine(void* arg);
 
 int main(int argc, char* argv[]) {
-    struct Row;
     std::vector<Row> rows_in;
-    
+
     CliMode mode;
     time_t timeout_ms;
     liParse(argc, argv, &mode, &timeout_ms);
@@ -53,15 +55,6 @@ int main(int argc, char* argv[]) {
         k=var;
         std::cout<<"you entered Var: "<<var<<std::endl;
     }
-
-     
-
-
-
-
-
-
-
 
     //-- all --rate --thread 
     // read in from file
