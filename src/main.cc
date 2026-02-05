@@ -22,14 +22,14 @@ struct ThreadDatum {
     pthread_t handle;
     int thread_index;
     const int *k;
-    const std::vector<Row> rows_in; // changed *vector to vector, maybe wrong. 
+    std::*vector<Row> rows_in; // changed *vector to vector, maybe wrong. 
 };
 
 
 void* StartRoutine(void* arg);
 
 int main(int argc, char* argv[]) {
-   // std::vector<Row> rows_in;
+    std::vector<Row> rows_in;
 
     CliMode mode;   
     Time_t timeout_ms;
