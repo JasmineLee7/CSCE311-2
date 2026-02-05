@@ -10,7 +10,7 @@
 #include <fstream>
 #include <sys/sysinfo.h>
 
-int k;
+int k=0;
 
 struct Row {
     std::string id;
@@ -70,6 +70,10 @@ int main(int argc, char* argv[]) {
 void* StartRoutine(void* arg) {
     int curr_thread = 0;
     int max_thread = k; 
+
+    while(k==0){
+        Timings_SleepMs(1000);
+    }
     while(curr_thread < max_thread){
         Timings_SleepMs(1000);
     }
