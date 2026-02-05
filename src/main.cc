@@ -12,8 +12,8 @@
 void* StartRoutine(void* arg);
 
 struct ThreadDatum {
-    int thread_index:
-}
+    int thread_index;
+};
 
 int main(){
     // read file in 
