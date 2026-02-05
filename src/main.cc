@@ -15,8 +15,8 @@ int main(){
    int n = get_nprocs();
    std::cout<<"nprocs: "<<n<<std::endl;
 
-   struct Row;
-   std::vector<Row> rows_in;
+   //struct Row;
+   //std::vector<Row> rows_in;
 
   // change back tty 
   std::ifstream tty_in("/dev/tty");
