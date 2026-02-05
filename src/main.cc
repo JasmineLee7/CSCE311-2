@@ -19,6 +19,9 @@ struct ThreadDatum {
 void* StartRoutine(void* arg);
 
 int main(int argc, char* argv[]) {
+    struct Row;
+    std::vector<Row> rows_in;
+    
     CliMode mode;
     time_t timeout_ms;
     liParse(argc, argv, &mode, &timeout_ms);
@@ -27,6 +30,7 @@ int main(int argc, char* argv[]) {
    int n = get_nprocs();
    std::cout<<"nprocs: "<<n<<std::endl;
    
+
     // ask user for k
     // change back tty 
     int k;
@@ -61,8 +65,7 @@ int main(int argc, char* argv[]) {
 
     //-- all --rate --thread 
     // read in from file
-    //struct Row;
-    //std::vector<Row> rows_in;
+    return 0;
 }
 
 // work loop, pay attention to time. it should time out after 
