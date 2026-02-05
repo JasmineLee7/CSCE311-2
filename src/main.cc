@@ -10,11 +10,6 @@
 #include <fstream>
 #include <sys/sysinfo.h>
 
-struct ThreadDatum {
-    int thread_index;
-    const int *k;
-    const *std::vector<Row> rows_in;
-};
 
 struct Row {
     std::string id;
@@ -22,14 +17,21 @@ struct Row {
     int iterations;
 };
 
+struct ThreadDatum {
+    int thread_index;
+    const int *k;
+    const *std::vector<Row> rows_in;
+};
+
+
 void* StartRoutine(void* arg);
 
 int main(int argc, char* argv[]) {
     std::vector<Row> rows_in;
 
-    CliMode mode;
+    CliMode mode;   
     time_t timeout_ms;
-    liParse(argc, argv, &mode, &timeout_ms);
+    CliParse(argc, argv, &mode, &timeout_ms);
 
     // read file in 
    int n = get_nprocs();
