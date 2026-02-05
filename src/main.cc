@@ -22,7 +22,7 @@ struct ThreadDatum {
     pthread_t handle;
     int thread_index;
     const int *k;
-    std::*vector<Row> rows_in; // changed *vector to vector, maybe wrong. 
+    std::vector<Row> rows_in; // changed *vector to vector, maybe wrong. 
 };
 
 
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     // "make realse threads as described" ---- Is this how you described it Lewis?
     std::vector<ThreadDatum> thread_data;
     for(int i=0; i< n-k; i++){
-        ThreadDatum td ={pthread_t(),i, &k, &rows_in};
+        ThreadDatum td ={pthread_t(),i, &k, rows_in};
         pthread_create(&td.handle, NULL, &StartRoutine, &td);
         td.thread_index = i+1; // thread index starts from 1
         thread_data.push_back(td);
