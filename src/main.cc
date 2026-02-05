@@ -20,8 +20,8 @@ struct Row {
 struct ThreadDatum {
     pthread_t handle;
     int thread_index;
-    //const int *k;
-    //const *std::vector<Row> rows_in;
+    const int *k;
+    const *std::vector<Row> rows_in;
 };
 
 
