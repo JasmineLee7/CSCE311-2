@@ -61,7 +61,6 @@ int main(int argc, char* argv[]) {
         std::cout<<"you entered Var: "<<var<<std::endl;
     }
 
-    //-- all --rate --thread 
     // read in from file
     return 0;
 }
