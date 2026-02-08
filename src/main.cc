@@ -70,9 +70,7 @@ void* StartRoutine(void* arg) {
     int curr_thread = 0;
     int max_thread = k; 
 
-    while(k==0){
-        Timings_SleepMs(1000);
-    }
+    
     while(curr_thread < max_thread){
         Timings_SleepMs(1000);
     }
