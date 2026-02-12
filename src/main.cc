@@ -29,19 +29,20 @@ struct ThreadDatum {
   size_t thread_index = 0;
 };
 
-// Row Initialization
+// Row Vector Initialization
 static std::vector<Row> rows;
 static size_t total_rows = 0;
 
-// Constants
+// Thread and iteration tracking
 static size_t n = 0;
 static size_t k = 0;
 static size_t released_k = 0;
 
-
+// CLI mode and timeout
 static CliMode mode;
 static uint32_t timeout_ms = 0;
 
+// Thread routine for processing rows
 void* StartRoutine(void* arg) {
 // make threads
   ThreadDatum* td = reinterpret_cast<ThreadDatum*>(arg);
@@ -67,8 +68,8 @@ void* StartRoutine(void* arg) {
     released_k = t + 1;
   }
 
+// log thread start
   ThreadLog("[thread %zu] started", t);
-
   Timings_t start = Timings_NowMs();
 
 // print out threads as they complete rows, and check for timeout
@@ -78,6 +79,7 @@ void* StartRoutine(void* arg) {
       ThreadLog("[thread %zu] returned", t);
       return nullptr;
     }
+    
 // compute the SHA256 hash for the current row
     const std::string& id = rows[row].id;
     const std::string& data = rows[row].data;
@@ -114,6 +116,7 @@ int main(int argc, char* argv[]) {
 
   std::vector<ThreadDatum> thread_data(n);
 
+// create threads
   for (size_t i = 0; i < n; ++i) {
     thread_data[i].thread_index = i + 1;
     pthread_create(&thread_data[i].handle, nullptr, &StartRoutine, &thread_data[i]);
@@ -128,6 +131,7 @@ int main(int argc, char* argv[]) {
 
   std::cout << "Enter max threads (1 - " << n << "): " << std::endl;
 
+// read k from /dev/tty to avoid blocking stdin
   std::ifstream tty_in("/dev/tty");
   size_t k_read = 0;
   if (tty_in) tty_in >> k_read;
