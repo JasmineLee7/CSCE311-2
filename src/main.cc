@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include <sys/sysinfo.h>
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <fstream>
@@ -13,6 +14,7 @@
 #include <string>
 #include <vector>
 
+// Row structure
 struct Row {
   std::string id;
   std::string data;
@@ -21,67 +23,82 @@ struct Row {
   char sha256[65] = {0};
 };
 
+// Thread data 
 struct ThreadDatum {
   pthread_t handle{};
   size_t thread_index = 0;
 };
 
-static std::vector<Row> g_rows;
-static size_t g_total_rows = 0;
+// Row Initialization
+static std::vector<Row> rows;
+static size_t total_rows = 0;
 
-static size_t g_n = 0;
-static volatile size_t g_k = 0;
-static volatile size_t g_released_k = 0;
+// Constants
+static size_t n = 0;
+static size_t k = 0;
+static size_t released_k = 0;
 
-static CliMode g_mode;
-static uint32_t g_timeout_ms = 0;
+
+static CliMode mode;
+static uint32_t timeout_ms = 0;
 
 void* StartRoutine(void* arg) {
+// make threads
   ThreadDatum* td = reinterpret_cast<ThreadDatum*>(arg);
   size_t t = td->thread_index;
 
-  while (g_k == 0) {
+// Prevents all the threads from being made before the program prompts for K
+  while (k == 0) {
     Timings_SleepMs(1);
   }
 
-  if (t > g_k) {
+// tracking threads
+  if (t > k) {
     ThreadLog("[thread %zu] returned", t);
     return nullptr;
   }
 
-  while (t > g_released_k) {
+  while (t > released_k) {
     Timings_SleepMs(1);
   }
 
-  if (g_mode == CLI_MODE_THREAD && t == g_released_k && t < g_k) {
-    g_released_k = t + 1;
+// thread released 
+  if (mode == CLI_MODE_THREAD && t == released_k && t < k) {
+    released_k = t + 1;
   }
 
   ThreadLog("[thread %zu] started", t);
 
   Timings_t start = Timings_NowMs();
 
-  for (size_t row = t - 1; row < g_total_rows; row += g_k) {
-    if (g_timeout_ms > 0 && Timings_TimeoutExpired(start, g_timeout_ms)) {
+// print out threads as they complete rows, and check for timeout
+  for (size_t row = t - 1; row < total_rows; row += k) {
+    if (timeout_ms > 0 && Timings_TimeoutExpired(start, timeout_ms)) {
       ThreadLog("[thread %zu] timeout", t);
       ThreadLog("[thread %zu] returned", t);
       return nullptr;
     }
+// compute the SHA256 hash for the current row
+    const std::string& id = rows[row].id;
+    const std::string& data = rows[row].data;
+    uint32_t counter = rows[row].iterations;
 
-    const std::string& id = g_rows[row].id;
-    const std::string& data = g_rows[row].data;
-    uint32_t counter = g_rows[row].iterations;
-
+// create a seed by concatenating the id, data, and counter
     std::vector<uint8_t> seed;
-    seed.insert(seed.end(), id.begin(), id.end());
-    seed.insert(seed.end(), data.begin(), data.end());
+    seed.reserve(id.size() + data.size() + sizeof(counter));
 
-    uint8_t* counter_bytes = reinterpret_cast<uint8_t*>(&counter);
+    const uint8_t* id_bytes = reinterpret_cast<const uint8_t*>(id.data());
+    seed.insert(seed.end(), id_bytes, id_bytes + id.size());
+
+    const uint8_t* data_bytes = reinterpret_cast<const uint8_t*>(data.data());
+    seed.insert(seed.end(), data_bytes, data_bytes + data.size());
+
+    const uint8_t* counter_bytes = reinterpret_cast<const uint8_t*>(&counter);
     seed.insert(seed.end(), counter_bytes, counter_bytes + sizeof(counter));
 
-    ComputeIterativeSha256Hex(seed.data(), seed.size(), counter, g_rows[row].sha256);
+    ComputeIterativeSha256Hex(seed.data(), seed.size(), counter, rows[row].sha256);
 
-    g_rows[row].thread_index = t;
+    rows[row].thread_index = t;
 
     ThreadLog("[thread %zu] completed row %zu", t, row + 1);
   }
@@ -91,66 +108,65 @@ void* StartRoutine(void* arg) {
 }
 
 int main(int argc, char* argv[]) {
-  CliParse(argc, argv, &g_mode, &g_timeout_ms);
+  CliParse(argc, argv, &mode, &timeout_ms);
 
-  g_n = static_cast<size_t>(get_nprocs());
+  n = static_cast<size_t>(get_nprocs());
 
-  std::vector<ThreadDatum> thread_data(g_n);
+  std::vector<ThreadDatum> thread_data(n);
 
-  for (size_t i = 0; i < g_n; ++i) {
+  for (size_t i = 0; i < n; ++i) {
     thread_data[i].thread_index = i + 1;
     pthread_create(&thread_data[i].handle, nullptr, &StartRoutine, &thread_data[i]);
   }
 
-  std::cin >> g_total_rows;
-  g_rows.resize(g_total_rows);
+  std::cin >> total_rows;
+  rows.resize(total_rows);
 
-  for (size_t i = 0; i < g_total_rows; ++i) {
-    std::cin >> g_rows[i].id >> g_rows[i].data >> g_rows[i].iterations;
+  for (size_t i = 0; i < total_rows; ++i) {
+    std::cin >> rows[i].id >> rows[i].data >> rows[i].iterations;
   }
 
-  std::cout << "Enter max threads (1 - " << g_n << "): " << std::endl;
+  std::cout << "Enter max threads (1 - " << n << "): " << std::endl;
 
   std::ifstream tty_in("/dev/tty");
   size_t k_read = 0;
-
   if (tty_in) tty_in >> k_read;
 
-  if (k_read < 1) k_read = 1;
-  if (k_read > g_n) k_read = g_n;
+// ensure k is between 1 and n
+  k_read = std::max<size_t>(1, std::min(k_read, n));
+  k = k_read;
 
-  g_k = k_read;
-
-  switch (g_mode) {
+// release threads based on mode
+  switch (mode) {
     case CLI_MODE_ALL:
-      g_released_k = g_k;
+      released_k = k;
       break;
 
     case CLI_MODE_RATE:
-      for (size_t i = 1; i <= g_k; ++i) {
-        g_released_k = i;
+      for (size_t i = 1; i <= k; ++i) {
+        released_k = i;
         Timings_SleepMs(1);
       }
       break;
 
     case CLI_MODE_THREAD:
-      g_released_k = 1;
+      released_k = 1;
       break;
 
     default:
       break;
   }
-
-  for (size_t i = 0; i < g_n; ++i) {
+// wait for threads to finish
+  for (size_t i = 0; i < n; ++i) {
     pthread_join(thread_data[i].handle, nullptr);
   }
 
   std::cout << "Thread\tStart\tEncryption" << std::endl;
-
-  for (size_t i = 0; i < g_total_rows; ++i) {
-    std::cout << g_rows[i].thread_index << "\t"
-              << g_rows[i].data << "\t"
-              << g_rows[i].sha256 << std::endl;
+// print out results
+  for (size_t i = 0; i < total_rows; ++i) {
+    std::cout << rows[i].thread_index << "\t"
+              << rows[i].data << "\t"
+              << rows[i].sha256 << std::endl;
   }
 
   return 0;
